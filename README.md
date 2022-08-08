@@ -11,7 +11,9 @@ Architecture:
 6) Docker image with standard nginx base image with self signed SSL certificate
 7) Workflow for Deploying the infrastructure/App Build and push image to ECR
 8) Task defintion in workflow for Deploying through CODE_DEPLOY for Blue Green Deployment.
+9) Code Deploy would use two target group for the Load balancer.
 
 
 
-![image](https://user-images.githubusercontent.com/110839796/183504188-7010ad02-fafc-464b-b090-db6e7f8d8394.png)
+![image](https://user-images.githubusercontent.com/110839796/183505131-8aa3e781-e0eb-470f-bfcb-8c472f9bfbca.png)
+

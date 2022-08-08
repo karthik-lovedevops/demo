@@ -1,3 +1,13 @@
+terraform {
+
+  extra_arguments "common_vars" {
+    commands = get_terraform_commands_that_need_vars()
+    optional_var_files = [
+      find_in_parent_folders("region.tfvars"),
+    ]
+  }
+}
+
 # Indicate what region to deploy the resources into
 generate "provider" {
   path = "provider.tf"
@@ -17,6 +27,7 @@ variable "aws_region" {
 EOF
 }
 
+# Backend to store the Terraform state files for the environment
 remote_state {
   backend = "s3"
   generate = {

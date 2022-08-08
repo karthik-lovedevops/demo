@@ -2,14 +2,14 @@
     "taskDefinitionArn": "arn:aws:ecs:us-west-2:312397576406:task-definition/service:3",
     "containerDefinitions": [
         {
-            "name": "web_app-api",
-            "image": "312397576406.dkr.ecr.us-east-1.amazonaws.com/dev-repo:latest",
+            "name": "my-web-api",
+            "image": "nginx:latest",
             "cpu": 1024,
             "memory": 2048,
             "portMappings": [
                 {
-                    "containerPort": 443,
-                    "hostPort": 443,
+                    "containerPort": 80,
+                    "hostPort": 80,
                     "protocol": "tcp"
                 }
             ],
@@ -35,6 +35,7 @@
     ],
     "placementConstraints": [],
     "compatibilities": [
+        "EC2",
         "FARGATE"
     ],
     "requiresCompatibilities": [
@@ -45,3 +46,4 @@
     "registeredAt": "2022-08-06T21:21:02.963000+04:00",
     "registeredBy": "arn:aws:iam::312397576406:user/serverless-admin"
 }
+

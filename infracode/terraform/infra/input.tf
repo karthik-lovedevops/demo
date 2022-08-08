@@ -28,3 +28,20 @@ variable "availability_zones" {
 variable "loadbalancer_name"{
   description = "Applcation load balancer"
 }
+
+variable "ecs_task_execution_role_name" {
+  description = "ECS task execution role name"
+  default = "myEcsTaskExecutionRole"
+}
+
+variable "app_name" {
+  description = "Application name"
+}
+
+variable "app_image" {
+  description = "Application image name"
+}
+
+variable "task_count" {
+  description = "The number of tasks to run in ECS"
+}

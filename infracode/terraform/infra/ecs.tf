@@ -68,7 +68,7 @@ resource "aws_ecs_service" "my-web-service" {
   }
 
   deployment_controller {
-    type = "ECS"
+    type = "CODE_DEPLOY"
   }
 
 

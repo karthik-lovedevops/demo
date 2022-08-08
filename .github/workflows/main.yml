@@ -1,0 +1,19 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - "master"
+
+                                               
+permissions:
+  contents: read
+  
+
+jobs:
+  deploy-infra:
+    name: deploy-infra
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terragrunt_sample/dev/us-east-1/infra/vpc

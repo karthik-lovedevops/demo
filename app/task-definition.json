@@ -2,7 +2,7 @@
     "taskDefinitionArn": "arn:aws:ecs:us-west-2:312397576406:task-definition/service:3",
     "containerDefinitions": [
         {
-            "name": "my-web-api",
+            "name": "my_web-api",
             "image": "nginx:latest",
             "cpu": 1024,
             "memory": 2048,

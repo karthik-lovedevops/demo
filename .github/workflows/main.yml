@@ -71,9 +71,6 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
-    - name: Download task definition
-      run: |
-        aws ecs describe-task-definition --region us-east-1 --task-definition service --query taskDefinition > task-definition.json
         
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
@@ -83,13 +80,13 @@ jobs:
         container-name: web_app-api
         image: ${{ steps.build-image.outputs.image }}
 
-#     - name: Deploy Amazon ECS task definition
-#       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-#       with:
-#         task-definition: ${{ steps.task-def.outputs.task-definition }}
-#         service: my-service
-#         cluster: my-cluster
-#         wait-for-service-stability: true
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: service
+        cluster: dev-ecs
+        wait-for-service-stability: true
 
 #     - name: Deploy for Blue/green
 #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1

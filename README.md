@@ -11,7 +11,7 @@ Architecture:
 7) Above implementation steps uses terragrunt as wrapper.
 8) Docker image with standard nginx base image with self signed SSL certificate
 9) Workflow for Deploying the infrastructure/App Build and push image to ECR
-10) Task defintion in workflow for Deploying through CODE_DEPLOY for Blue Green Deployment.
+10)Task defintion in workflow for Deploying through CODE_DEPLOY for Blue Green Deployment.
 11) Code Deploy would use two target group for the Load balancer.
 Note : Deploy task definition and Blue green Deploy needs to be carried out manually due to 
        time limit given to complete the task as the pipeline takes care of below steps

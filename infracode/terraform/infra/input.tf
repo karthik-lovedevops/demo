@@ -45,3 +45,7 @@ variable "app_image" {
 variable "task_count" {
   description = "The number of tasks to run in ECS"
 }
+
+variable "service_role_arn_code_deploy" {
+  description = "Service role for ECS code deploy"
+}

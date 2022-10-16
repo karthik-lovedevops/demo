@@ -16,11 +16,11 @@ resource "aws_ecs_cluster_capacity_providers" "my-web-cluster" {
   }
 }
 
-/* Getting task definition */
-data "aws_ecs_task_definition" "latest_task" {
-  task_definition = aws_ecs_task_definition.my-web.arn
-  depends_on = [aws_ecs_task_definition.my-web]
-}
+# /* Getting task definition */
+# data "aws_ecs_task_definition" "latest_task" {
+#   task_definition = aws_ecs_task_definition.my-web.arn
+#   depends_on = [aws_ecs_task_definition.my-web]
+# }
 
 /* Creating Task definition on ECS */
 resource "aws_ecs_task_definition" "my-web" {
@@ -33,14 +33,14 @@ resource "aws_ecs_task_definition" "my-web" {
   container_definitions = jsonencode([
     {
       name      = "${var.app_name}-api"
-      image     = "${var.app_image}"   ### "312397576406.dkr.ecr.us-east-1.amazonaws.com/dev-repo:latest" ## For 
+      image     = "${var.app_image}"   ### "312397576406.dkr.ecr.us-east-1.amazonaws.com/dev-repo:latest" ##
       cpu       = 1024
       memory    = 2048
       essential = true
       portMappings = [
         {
-          containerPort = 443
-          hostPort      = 443
+          containerPort = 80
+          hostPort      = 80
         }
       ]
     }
@@ -51,7 +51,7 @@ resource "aws_ecs_task_definition" "my-web" {
 resource "aws_ecs_service" "my-web-service" {
   name            = "${var.app_name}-service"
   cluster         = aws_ecs_cluster.my-web-cluster.id
-  task_definition = data.aws_ecs_task_definition.latest_task.arn
+  task_definition = aws_ecs_task_definition.my-web.arn
   desired_count   = var.task_count
   launch_type     = "FARGATE"
 
@@ -64,13 +64,15 @@ resource "aws_ecs_service" "my-web-service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.my-web-tg.arn
     container_name   = "${var.app_name}-api"
-    container_port   = 443
+    container_port   = 80
   }
 
+  lifecycle {
+    ignore_changes = [task_definition,load_balancer,desired_count]
+  }
   deployment_controller {
     type = "CODE_DEPLOY"
   }
-
 
 }
 

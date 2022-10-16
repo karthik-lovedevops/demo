@@ -16,7 +16,7 @@ generate "provider" {
 provider "aws" {
   region = var.aws_region
   assume_role {
-    role_arn = "arn:aws:iam::312397576406:role/terragrunt_role"
+    role_arn = "arn:aws:iam::434442716997:role/terragrunt_role"
   }
   
 }
@@ -35,10 +35,10 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "terraform-state-ecs-1984"
+    bucket = "terraform-state-ecs-oct"
 
     key = "${path_relative_to_include()}/terraform.tfstate"
-    region         = "us-west-1"
+    region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "my-lock-table"
   }

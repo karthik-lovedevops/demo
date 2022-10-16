@@ -7,24 +7,52 @@ resource "aws_lb" "my-web" {
   subnets            = aws_subnet.public_subnet.*.id
 }
 
-/* Target group for the application load balancer */
+/* Blue Target group for Blue/Green Deployment */
 resource "aws_lb_target_group" "my-web-tg" {
   name        = "my-web-alb-tg"
-  port        = 443
-  protocol    = "HTTPS"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc.id
+}
+
+/* Green Target group for Blue/Green Deployment */
+
+resource "aws_lb_target_group" "my-web-tg-green" {
+  name        = "my-web-alb-tg-green"
+  port        = 80
+  protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.vpc.id
 }
 
 
 /* Listener for ALB to forward  Target group */
-resource "aws_lb_listener" "my-web-listener" {
+resource "aws_lb_listener" "my-web-https" {
   load_balancer_arn = aws_lb.my-web.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  protocol          = "HTTPS"
+  certificate_arn   = "arn:aws:acm:us-east-1:434442716997:certificate/86684731-0eb7-429a-8629-8fb823e3ad3b"
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.my-web-tg.arn
+  }
+}
+/* Listener for ALB to redirect HTTP to HTTPS */
+resource "aws_lb_listener" "my-web-http" {
+  load_balancer_arn = aws_lb.my-web.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 

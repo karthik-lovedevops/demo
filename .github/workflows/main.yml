@@ -36,9 +36,9 @@ jobs:
         run: terragrunt plan
       - name: Terragrunt apply
         run: terragrunt apply -auto-approve
-  deploy-app:
+  build-app:
     needs: deploy-infra
-    name: deploy-app
+    name: build-app
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -70,7 +70,15 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-        
+  deploy-app:
+    needs: build-app
+    name: deploy-app
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: app
+    steps:
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1

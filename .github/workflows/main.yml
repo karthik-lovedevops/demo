@@ -88,7 +88,7 @@ jobs:
         cluster: dev-ecs
         wait-for-service-stability: true
 
-    - name: Deploy for Blue/green
+    - name: Deploy for Blue/green deploy
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}

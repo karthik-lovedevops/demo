@@ -88,13 +88,13 @@ jobs:
         cluster: dev-ecs
         wait-for-service-stability: true
 
-#     - name: Deploy for Blue/green
-#       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-#       with:
-#         task-definition: ${{ steps.task-def.outputs.task-definition }}
-#         cluster: ${{ secrets.ECS_CLUSTER }}
-#         service: ${{ secrets.ECS_SERVICE }}
-#         wait-for-service-stability: true
-#         codedeploy-appspec: app.yaml
-#         codedeploy-application: ecs-blue-green-deploy
-#         codedeploy-deployment-group: production
+    - name: Deploy for Blue/green
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        cluster: dev-ecs
+        service: web_app
+        wait-for-service-stability: true
+        codedeploy-appspec: appspec.yaml
+        codedeploy-application: Deployment-web_app
+        codedeploy-deployment-group: web_app-deployment-group

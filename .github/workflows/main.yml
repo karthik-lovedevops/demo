@@ -11,39 +11,41 @@ permissions:
   
 
 jobs:
-  deploy-infra:
-    name: deploy-infra
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: infracode/dev/us-east-1/infra/vpc
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: us-east-1
-      ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Terragrunt
-        uses: autero1/action-terragrunt@v1.1.0
-        with:
-          terragrunt_version: v0.38.6
-      - name: Interact with Terragrunt
-        run: terragrunt --version
-      - name: Terragrunt plan
-        run: terragrunt plan
-      - name: Terragrunt apply
-        run: terragrunt apply -auto-approve
+#   deploy-infra:
+#     name: deploy-infra
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: infracode/dev/us-east-1/infra/vpc
+#     env:
+#       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#       AWS_DEFAULT_REGION: us-east-1
+#       ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+#       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+#       - name: Setup Terragrunt
+#         uses: autero1/action-terragrunt@v1.1.0
+#         with:
+#           terragrunt_version: v0.38.6
+#       - name: Interact with Terragrunt
+#         run: terragrunt --version
+#       - name: Terragrunt plan
+#         run: terragrunt plan
+#       - name: Terragrunt apply
+#         run: terragrunt apply -auto-approve
   build-app:
-    needs: deploy-infra
+#     needs: deploy-infra
     name: build-app
     runs-on: ubuntu-latest
     environment: production
     defaults:
       run:
         working-directory: app
+    outputs:
+      output1: ${{ steps.build-image.outputs.image }
 
     steps:
     - name: Checkout
@@ -70,31 +72,39 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+  deploy_app:
+    needs: build-app
+    name: deploy_app
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - run: |
+        echo "${{needs.build-app.output.output1}}"
         
         
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        container-name: web_app-api
-        image: ${{ steps.build-image.outputs.image }}
+#     - name: Fill in the new image ID in the Amazon ECS task definition
+#       id: task-def
+#       uses: aws-actions/amazon-ecs-render-task-definition@v1
+#       with:
+#         task-definition: task-definition.json
+#         container-name: web_app-api
+#         image: ${{ steps.build-image.outputs.image }}
 
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: web_app-service
-        cluster: dev-ecs
-        wait-for-service-stability: true
+#     - name: Deploy Amazon ECS task definition
+#       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#       with:
+#         task-definition: ${{ steps.task-def.outputs.task-definition }}
+#         service: web_app-service
+#         cluster: dev-ecs
+#         wait-for-service-stability: true
 
-    - name: Deploy for Blue/green deploy
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        cluster: dev-ecs
-        service: web_app-service
-        wait-for-service-stability: true
-        codedeploy-appspec: appspec.yaml
-        codedeploy-application: Deployment-web_app
-        codedeploy-deployment-group: web_app-deployment-group
+#     - name: Deploy for Blue/green deploy
+#       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#       with:
+#         task-definition: ${{ steps.task-def.outputs.task-definition }}
+#         cluster: dev-ecs
+#         service: web_app-service
+#         wait-for-service-stability: true
+#         codedeploy-appspec: appspec.yaml
+#         codedeploy-application: Deployment-web_app
+#         codedeploy-deployment-group: web_app-deployment-group

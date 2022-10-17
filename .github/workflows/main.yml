@@ -79,7 +79,7 @@ jobs:
     environment: production
     steps:
     - run: |
-        echo "${{needs.build-app.output.output1}}"
+        echo ${{needs.build-app.output.output1}}
         
         
 #     - name: Fill in the new image ID in the Amazon ECS task definition

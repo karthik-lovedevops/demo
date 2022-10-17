@@ -45,7 +45,7 @@ jobs:
       run:
         working-directory: app
     outputs:
-      output1: ${{ steps.build-image.outputs.image }
+      output1: ${{ steps.build-image.outputs.image }}
 
     steps:
     - name: Checkout

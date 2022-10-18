@@ -95,7 +95,7 @@ jobs:
         codedeploy-deployment-group: web_app-deployment-group
         wait-for-service-stability: true
 
-    - name: Deploy for Blue/green deployment
+    - name: Deploy for Blue/green deploy
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}

@@ -98,7 +98,7 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: Deployment-web_app
+        service: web_app-service
         cluster: dev-ecs
         wait-for-service-stability: true
 
@@ -109,6 +109,6 @@ jobs:
         cluster: dev-ecs
         service: web_app-service
         wait-for-service-stability: true
-        codedeploy-appspec: appspec.yaml
+        codedeploy-appspec: appsec.yml
         codedeploy-application: Deployment-web_app
         codedeploy-deployment-group: web_app-deployment-group

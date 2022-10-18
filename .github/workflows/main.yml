@@ -100,6 +100,7 @@ jobs:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: web_app-service
         cluster: dev-ecs
+        codedeploy-appspec: appspec.json
         codedeploy-application: Deployment-web_app
         codedeploy-deployment-group: web_app-deployment-group
         wait-for-service-stability: true

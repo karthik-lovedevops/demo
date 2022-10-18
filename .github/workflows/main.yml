@@ -78,6 +78,7 @@ jobs:
         export IMAGE_TAG=${{ steps.build-image.outputs.name}}
         echo $IMAGE_TAG
         echo "$GITHUB_CONTEXT"
+        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition service --region us-east-1)
 #   deploy_app:
 #     needs: build-app
 #     name: deploy_app

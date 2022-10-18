@@ -1,0 +1,17 @@
+{
+    "version": 1,
+    "Resources": [
+        {
+            "TargetService": {
+                "Type": "AWS::ECS::Service",
+                "Properties": {
+                    "TaskDefinition": "arn:aws:ecs:us-east-1:434442716997:task-definition/service:1",
+                    "LoadBalancerInfo": {
+                        "ContainerName": "web_app-api",
+                        "ContainerPort": 80
+                    }
+                }
+            }
+        }
+    ]
+}

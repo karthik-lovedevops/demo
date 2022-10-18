@@ -77,11 +77,15 @@ jobs:
     name: deploy_app
     runs-on: ubuntu-latest
     environment: production
+    env:
+       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       AWS_DEFAULT_REGION: us-east-1
     steps:
     - run: |
         export NEW_IMAGE=${{needs.build-app.output.output1}}
         export TASK_NAME=service
-        export REGION=eu-west-1
+        export REGION=us-east-1
         export CLUSTER_NAME=dev-ecs
         export SERVICE_NAME=web_app-service
         

@@ -72,18 +72,18 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$IMAGE_TAG"
-    - name: deploy app
-      id: deploy_app
-      run: |
-        export IMAGE_TAG=${{ steps.build-image.outputs.name}}
-        echo $IMAGE_TAG
-        echo "$GITHUB_CONTEXT"
-        NEW_IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition service --region us-east-1)
-        NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$NEW_IMAGE" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
-        NEW_REVISION=$(aws ecs register-task-definition --region us-east-1 --cli-input-json "$NEW_TASK_DEFINITION")
-        NEW_REVISION_DATA=$(echo $NEW_REVISION | jq '.taskDefinition.revision')
-        NEW_SERVICE=$(aws ecs update-service --cluster dev-ecs --service web_app-service --task-definition service:$NEW_REVISION_DATA  --force-new-deployment) 
+#     - name: deploy app
+#       id: deploy_app
+#       run: |
+#         export IMAGE_TAG=${{ steps.build-image.outputs.name}}
+#         echo $IMAGE_TAG
+#         echo "$GITHUB_CONTEXT"
+#         NEW_IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#         TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition service --region us-east-1)
+#         NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$NEW_IMAGE" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+#         NEW_REVISION=$(aws ecs register-task-definition --region us-east-1 --cli-input-json "$NEW_TASK_DEFINITION")
+#         NEW_REVISION_DATA=$(echo $NEW_REVISION | jq '.taskDefinition.revision')
+#         NEW_SERVICE=$(aws ecs update-service --cluster dev-ecs --service web_app-service --task-definition service:$NEW_REVISION_DATA  --force-new-deployment) 
         
 #   deploy_app:
 #     needs: build-app

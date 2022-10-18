@@ -83,7 +83,7 @@ jobs:
        AWS_DEFAULT_REGION: us-east-1
     steps:
     - run: |
-        export NEW_IMAGE=${{needs.build-app.output.output1}}
+        echo "IMAGE=${{needs.build-app.output.output1}}" >> $GITHUB_ENV
         export TASK_NAME=service
         export REGION=us-east-1
         export CLUSTER_NAME=dev-ecs

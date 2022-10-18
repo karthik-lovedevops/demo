@@ -111,6 +111,6 @@ jobs:
         cluster: dev-ecs
         service: web_app-service
         wait-for-service-stability: true
-        codedeploy-appspec: appsec.yml
+        codedeploy-appspec: appspec.json
         codedeploy-application: Deployment-web_app
         codedeploy-deployment-group: web_app-deployment-group

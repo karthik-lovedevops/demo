@@ -94,13 +94,13 @@ jobs:
         container-name: web_app-api
         image: ${{ steps.build-image.outputs.image }}
 
-#     - name: Deploy Amazon ECS task definition
-#       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-#       with:
-#         task-definition: ${{ steps.task-def.outputs.task-definition }}
-#         service: web_app-service
-#         cluster: dev-ecs
-#         wait-for-service-stability: true
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: web_app-service
+        cluster: dev-ecs
+        wait-for-service-stability: true
 
 #     - name: Deploy for Blue/green deploy
 #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1

@@ -73,7 +73,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$IMAGE_TAG"
     - name: deploy app
-      id: deploy app
+      id: deploy_app
       run: |
         export IMAGE_TAG=${{ steps.build-image.outputs.name}}
         echo $IMAGE_TAG
